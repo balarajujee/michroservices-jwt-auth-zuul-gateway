@@ -1,0 +1,100 @@
+eureka:
+  instance:
+    hostname: localhost
+    port: 8761
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+#    instance:
+#      preferIpAddress: true
+
+server:
+   port: 9086 # This is the default port anyway, but you can change it here
+spring:
+  application:
+    name: zuul-gateway-jwt-auth-service
+  datasource:
+    url: jdbc:h2:mem:javatpoint
+    #url: jdbc:h2:mem:test_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # url: jdbc:mysql://localhost:3306/user_db
+    username: root
+    password: root
+  tomcat:
+    max-wait: 20000
+    max-active: 50
+    max-idle: 20
+    min-idle: 15
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        # dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        id:
+          new_generator_mappings: false
+
+
+security:
+  jwt:
+    token:
+      secret-key: secret-key
+      expire-length: 300000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
+
+ribbon:
+  ReadTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 130000
+
+zuul:
+  #  sensitiveHeaders: Cookie,Set-Cookie
+  ribbon:
+    eager-load:
+      enabled: true
+  routes:
+    nooble-security:
+      sensitiveHeaders:
+      path: /oauth/**
+      stripPrefix: false
+      serviceId: oauth-demo
+    morningservice:
+      sensitiveHeaders:
+      path: /morning/**
+      stripPrefix: false
+      serviceId: good-morning
+    eveningservice:
+      sensitiveHeaders:
+      path: /evening/**
+      stripPrefix: false
+      serviceId: good-evening
+    afternoonservice:
+      sensitiveHeaders:
+      path: /noon/**
+      stripPrefix: false
+      serviceId: good-afternoon
+    demo2service:
+      sensitiveHeaders:
+      path: /demo2/**
+      stripPrefix: false
+      serviceId: demo2-service 
+
+
+
+      
+UserController:
+  signin: Authenticates user and returns its JWT token.
+  signup: Creates user and returns its JWT token
+  delete: Deletes specific user by username
+  search: Returns specific user by username
+  me: Returns current user's data
+  
+  
+  
+  
+  

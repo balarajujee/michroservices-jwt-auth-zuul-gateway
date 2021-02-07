@@ -1,0 +1,60 @@
+eureka:
+  instance:
+    hostname: localhost
+    port: 8761
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+#    instance:
+#      preferIpAddress: true
+
+
+server:
+  port: 8085
+spring:
+  application:
+    name: zuul-gateway
+ribbon:
+  ReadTimeout: 60000
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 130000
+
+zuul:
+  #  sensitiveHeaders: Cookie,Set-Cookie
+  ribbon:
+    eager-load:
+      enabled: true
+  routes:
+    nooble-security:
+      sensitiveHeaders:
+      path: /oauth/**
+      stripPrefix: false
+      serviceId: oauth-demo
+    morningservice:
+      sensitiveHeaders:
+      path: /morning/**
+      stripPrefix: false
+      serviceId: good-morning
+    eveningservice:
+      sensitiveHeaders:
+      path: /evening/**
+      stripPrefix: false
+      serviceId: good-evening
+    afternoonservice:
+      sensitiveHeaders:
+      path: /noon/**
+      stripPrefix: false
+      serviceId: good-afternoon
+    demo2service:
+      sensitiveHeaders:
+      path: /demo2/**
+      stripPrefix: false
+      serviceId: demo2-service 
+
+
+      #      ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
